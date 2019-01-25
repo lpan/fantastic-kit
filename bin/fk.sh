@@ -41,8 +41,6 @@ fpr()
     if [[ $curBranch != "master" ]]; then
       # assuming ssh remote since `fclone` clone from ssh remote by default
       read repoName ownerName < <(remote-info)
-      #jrepoName=$(git config --get remote.origin.url | xargs basename | cut -d'.' -f1)
-      #ownerName=$(git config --get remote.origin.url | cut -d'/' -f1 | cut -d':' -f2)
       pr-exists.rb repoName ownerName curBranch
       if [[ $? -eq 0 ]]; then
         xdg-open https://github.com/$ownerName/$repoName/pull/new/$curBranch &> /dev/null
@@ -58,6 +56,12 @@ fpr()
     echo "cannot open pr since current directory is not a git repo"
     return 1
   fi
+}
+
+frepo()
+{
+  read repoName ownerName < <(remote-info)
+  xdg-open https://github.com/$ownerName/$repoName &> /dev/null
 }
 
 frun()
@@ -101,6 +105,9 @@ fk()
   ;;
   load-dev)
     fload-dev
+  ;;
+  repo)
+    frepo
   ;;
   *)
     frun $@
