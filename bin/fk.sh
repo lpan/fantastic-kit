@@ -60,6 +60,10 @@ fpr()
 
 frepo()
 {
+  if ! git rev-parse --git-dir &>/dev/null; then
+    echo "not in a git repo"
+    return 1
+  fi
   read repoName ownerName < <(remote-info)
   xdg-open https://github.com/$ownerName/$repoName &> /dev/null
 }
