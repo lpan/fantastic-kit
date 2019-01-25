@@ -27,14 +27,22 @@ fclone()
   fcd $cdDir
 }
 
+remote-info()
+{
+  repoName=$(git config --get remote.origin.url | xargs basename | cut -d'.' -f1)
+  ownerName=$(git config --get remote.origin.url | cut -d'/' -f1 | cut -d':' -f2)
+  echo $repoName $ownerName
+}
+
 fpr()
 {
   if git rev-parse --git-dir &> /dev/null; then
     curBranch=$(git symbolic-ref --short HEAD)
     if [[ $curBranch != "master" ]]; then
       # assuming ssh remote since `fclone` clone from ssh remote by default
-      repoName=$(git config --get remote.origin.url | xargs basename | cut -d'.' -f1)
-      ownerName=$(git config --get remote.origin.url | cut -d'/' -f1 | cut -d':' -f2)
+      read repoName ownerName < <(remote-info)
+      #jrepoName=$(git config --get remote.origin.url | xargs basename | cut -d'.' -f1)
+      #ownerName=$(git config --get remote.origin.url | cut -d'/' -f1 | cut -d':' -f2)
       pr-exists.rb repoName ownerName curBranch
       if [[ $? -eq 0 ]]; then
         xdg-open https://github.com/$ownerName/$repoName/pull/new/$curBranch &> /dev/null

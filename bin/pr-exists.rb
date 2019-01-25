@@ -23,4 +23,4 @@ rescue => e
   exit(2)
 end
 
-exit(1) unless data.kind_of?(Array) && data.first.has_key?('url')
+exit(1) unless data.kind_of?(Array) and data.any? and data.first.has_key?('url')
