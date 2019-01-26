@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# check for updates
+kit-check-update
+
 fcd()
 {
   cd $HOME/src/github.com/$1
